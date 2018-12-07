@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_video_chat_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/select_channel_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="@string/str_msg_channel"
+        android:textColor="@color/white" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:padding="15dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:onClick="onClickFinish"
+        android:background="@drawable/logout"/>
+
+    <TextView
+        android:id="@+id/select_channel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/select_channel_title"
+        android:layout_margin="40dp"
+        android:background="@color/blue"
+        android:clickable="true"
+        android:gravity="center"
+        android:onClick="onClickChat"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="@string/str_join"
+        android:textColor="@color/white" />
+
+    <EditText
+        android:id="@+id/select_channel_edittiext"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/select_channel_title"
+        android:layout_marginBottom="25dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="40dp"
+        android:layout_toLeftOf="@+id/select_channel_button"
+        android:background="@color/white"
+        android:hint="@string/str_channel"
+        android:lines="1"
+        android:padding="5dp" />
+
+    <RadioGroup
+        android:id="@+id/sekect_mode_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/blue"
+        android:paddingLeft="120dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:orientation="horizontal">
+
+    </RadioGroup>
+
+
+</RelativeLayout>
