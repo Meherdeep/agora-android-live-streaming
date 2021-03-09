@@ -1,11 +1,12 @@
 package com.agora.samtan.agorabroadcast;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import io.agora.rtc.Constants;
 

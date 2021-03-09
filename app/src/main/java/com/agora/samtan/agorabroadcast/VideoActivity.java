@@ -2,8 +2,6 @@ package com.agora.samtan.agorabroadcast;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceView;
@@ -11,7 +9,7 @@ import android.view.View;   ;//;.;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.agora.samtan.agorabroadcast.activity.LoginActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
@@ -188,11 +186,5 @@ public class VideoActivity extends AppCompatActivity {
 
     public void onEndCallClicked(View view) {
         finish();
-    }
-
-    public void onChatClicked(View view) {
-        Intent loginIntent = new Intent(this, LoginActivity.class);
-        loginIntent.putExtra(LOGIN_MESSAGE, channelName);
-        startActivity(loginIntent);
     }
 }
