@@ -1,21 +1,23 @@
 package com.agora.samtan.agorabroadcast;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceView;
-import android.view.View;   ;//;.;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import io.agora.rtc.Constants;
-import io.agora.rtc.IRtcEngineEventHandler;
-import io.agora.rtc.RtcEngine;
-import io.agora.rtc.video.VideoCanvas;
-import io.agora.rtc.video.VideoEncoderConfiguration;
+import io.agora.rtc2.IRtcEngineEventHandler;
+import io.agora.rtc2.RtcEngine;
+import io.agora.rtc2.RtcEngineConfig;
+import io.agora.rtc2.video.VideoCanvas;
+
 
 public class VideoActivity extends AppCompatActivity {
 
@@ -26,7 +28,8 @@ public class VideoActivity extends AppCompatActivity {
     private IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
 
         @Override
-        public void onFirstRemoteVideoDecoded(final int uid, int width, int height, int elapsed) {
+        public void onUserJoined(final int uid, int elapsed) {
+            super.onUserJoined(uid, elapsed);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -115,14 +118,11 @@ public class VideoActivity extends AppCompatActivity {
     }
 
     private void setupRemoteVideo(int uid) {
-        FrameLayout container = (FrameLayout) findViewById(R.id.remote_video_view_container);
-//        if (container.getChildCount() > 1) {
-//            return;
-//        }
+        SurfaceView remoteView = new SurfaceView(getApplicationContext());
 
-        SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
-        container.addView(surfaceView);
-        mRtcEngine.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, uid));
+        FrameLayout container = (FrameLayout) findViewById(R.id.remote_video_view_container);
+        container.addView(remoteView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        mRtcEngine.setupRemoteVideo(new VideoCanvas(remoteView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
     }
 
     private void onRemoteUserLeft() {
@@ -132,35 +132,37 @@ public class VideoActivity extends AppCompatActivity {
 
     private void initAgoraEngineAndJoinChannel() {
         initalizeAgoraEngine();
-        mRtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
         mRtcEngine.setClientRole(channelProfile);
-        setupVideoProfile();
+        mRtcEngine.enableVideo();
+        mRtcEngine.enableAudio();
         setupLocalVideo();
+        mRtcEngine.startPreview();
         joinChannel();
     }
 
     private void initalizeAgoraEngine() {
         try {
-            mRtcEngine = RtcEngine.create(getBaseContext(), getString(R.string.private_app_id), mRtcEventHandler);
+            RtcEngineConfig rtcEngineConfig = new RtcEngineConfig();
+            rtcEngineConfig.mAppId = getString(R.string.private_app_id);
+            rtcEngineConfig.mContext = this.getApplicationContext();
+            rtcEngineConfig.mEventHandler = mRtcEventHandler;
+
+            mRtcEngine = RtcEngine.create(rtcEngineConfig);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void setupVideoProfile() {
-        mRtcEngine.enableVideo();
-
-        mRtcEngine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(VideoEncoderConfiguration.VD_640x480, VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15,
-                VideoEncoderConfiguration.STANDARD_BITRATE,
-                VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT));
-    }
-
     private void setupLocalVideo() {
+        SurfaceView localView = new SurfaceView(getApplicationContext());
         FrameLayout container = (FrameLayout) findViewById(R.id.local_video_view_container);
-        SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
-        surfaceView.setZOrderMediaOverlay(true);
-        container.addView(surfaceView);
-        mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, 0));
+        if(channelProfile == 1) {
+            container.addView(localView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            localView.setZOrderMediaOverlay(true);
+            mRtcEngine.setupLocalVideo(new VideoCanvas(localView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
+        }else{
+            container.setVisibility(View.GONE);
+        }
     }
 
     private void joinChannel() {

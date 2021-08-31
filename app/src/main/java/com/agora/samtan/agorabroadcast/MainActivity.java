@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import io.agora.rtc.Constants;
+import io.agora.rtc2.Constants;
 
 public class MainActivity extends AppCompatActivity {
 
